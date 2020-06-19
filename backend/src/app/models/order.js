@@ -9,7 +9,11 @@ class Order extends Model {
         deliveryman_id: Sequelize.INTEGER,
         signature_id: Sequelize.INTEGER,
         product_name: Sequelize.STRING,
-        signature_id: Sequelize.INTEGER
+        signature_id: Sequelize.INTEGER,
+        canceled_at: Sequelize.DATE,
+        start_date: Sequelize.DATE,
+        end_date: Sequelize.DATE,
+
       },
       {
         sequelize
