@@ -1,6 +1,7 @@
 import Order from '../models/order';
 import * as Yup from 'yup';
-import { startOfHour, parseISO, isBefore, format, subHours } from 'date-fns';
+import { Op } from 'sequelize';
+import { startOfHour, parseISO, isBefore, isAfter, format, setHours, setMinutes, setSeconds } from 'date-fns';
 
 class WithdrawnController {
   async update(req, res) {
@@ -20,6 +21,15 @@ class WithdrawnController {
     if(!order){
       return res.status(400).json({ error: "order dosn't exist "})
     }
+
+    const topLimit = setSeconds(setMinutes(setHours(new Date(), 8), 0), 0);
+    const botLimit = setSeconds(setMinutes(setHours(new Date(), 18), 0), 0);
+
+    if(isBefore(new Date(), topLimit) || isAfter(new Date(), botLimit)){
+      return res.status(401).json({ error: 'The package can only be taken between 9am and 6pm' });
+    }
+
+
 
     await order.update(req.body);
     return res.json(order);
